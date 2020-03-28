@@ -1,0 +1,2 @@
+library(MCS)
+print('hello world')
