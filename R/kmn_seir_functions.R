@@ -63,8 +63,7 @@ kmn_seir <- function(parameter_values, initial_values, time_values) {
 }
 
 
-
-
+out = kmn_seir()
 
 
 
