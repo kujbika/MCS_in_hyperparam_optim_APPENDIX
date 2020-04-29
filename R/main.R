@@ -1,5 +1,5 @@
 setwd("C:/Marci/CEU/ThesisDONTUSETHIS/CODE/R")
-source("MN-SEIR-MODELS/m4n3.R")
+source("MN-SEIR-MODELS/m3n5.R")
 flu = read.csv("flu.csv")
 cases = flu$cases
 
@@ -20,7 +20,7 @@ start = proc.time()
 optimum <- optimParallel(par=initial_params,
                          fn=mn_optim,
                          lower=rep(0, 7),
-                         control=list(maxit=150, trace=6, fnscale=10),
+                         control=list(maxit=150, trace=6, fnscale=1),
                          parallel=list(cl=cl))
 end = proc.time()
 stopCluster(cl)

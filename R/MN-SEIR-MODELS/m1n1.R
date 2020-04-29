@@ -27,14 +27,13 @@ mn_optim <- function(parameter_values) {
       dE1 <- (k*b*(I - q*I_S))*S/N - m*sigma*E1
       
       if (time <= tau_d+1){
-         lagged1 = rep(0,2)} #this is for E_m(t-tau_d)
+        lagged1 = rep(0,4)
+        dEm = 0} #this is for E_m(t-tau_d)
       else {
-         lagged1 = deSolve :: lagvalue(time - tau_d)[c(1,3,6,8)]
+        lagged1 = deSolve :: lagvalue(time - tau_d)[c(1,3,6,8)]
+        dEm <- (1/N)*k*b*(lagged1[4] - q*lagged1[3]) * lagged1[1] - m*sigma*lagged1[2]
       }
-      dEm <- (1/N)*k*b*(lagged1[8] - q*lagged1[6]) * lagged1[1] - m*sigma*lagged1[3]
-      
       dP_I1 = P.gen(m, sigma, dEm, tau_d, n, gamma, 1)
-
       dI_A1 = m*sigma*E1 - n*gamma*I_A1 - P_I1
       
       
@@ -76,6 +75,5 @@ mn_optim <- function(parameter_values) {
     control = list(interpol=2)
   )
   out = as.data.frame(out)
-  return(sum(((out$I + out$Q) - cases)^2))
+  return(sum(((out$I + out$Q) - cases)^2) / length(cases))
 }
-

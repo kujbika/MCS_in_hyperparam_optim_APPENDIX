@@ -44,7 +44,7 @@ mn_optim <- function(parameter_values) {
       
       dP_I3 = P.gen(m, sigma, m * sigma * (lagged1[1] - lagged1[2]), tau_d, n, gamma, 3)
       
-      dI_A1 = m*sigma*E2 - n*gamma*I_A1 - P_I1
+      dI_A1 = m*sigma*E4 - n*gamma*I_A1 - P_I1
       
       dI_A2 <- n*gamma* I_A1 - n*gamma*I_A2 - P_I2
       
@@ -56,7 +56,7 @@ mn_optim <- function(parameter_values) {
       
       dI_S2 <- P_I2 + n * gamma * I_S1 - (n*gamma+d_I) * I_S2
       
-      dI_S3 <- P_I3 + n * gamma * I_S3 - (n*gamma+d_I) * I_S3
+      dI_S3 <- P_I3 + n * gamma * I_S2 - (n*gamma+d_I) * I_S3
       
       dI_S <- dI_S1+dI_S2+dI_S3
       
@@ -101,6 +101,6 @@ mn_optim <- function(parameter_values) {
     control = list(interpol=2)
   )
   out = as.data.frame(out)
-  return(sum(((out$I + out$Q) - cases)^2))
+  return(sum((out$I + out$Q - cases)^2) / length(cases))
 }
 
