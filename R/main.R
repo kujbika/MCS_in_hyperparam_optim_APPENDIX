@@ -34,15 +34,16 @@ parscale.parameters <- function(par, scale, fix = 1){
 }
 
 parameter_values <- c(
-  k=30,
-  b=0.02,
+  min_contract_size=10,
+  lambda=10,
+  b=0.08,
   q=0.9,
   sigma=1/5,
   gamma=1/14,
-  d_I=1,
-  tau_d=1.5
+  tau_d=1,
+  d_I=1
 )
-scale=c(20, 0.05, 0.05, 0.1, 0.1, 0.05, 0.1)
+scale=c(1e-3, 0.05, 0.05, 0.1, 0.1, 0.2)
 p.scale=parscale.parameters(parameter_values, scale)
 
 
@@ -64,10 +65,10 @@ for (m in 1:5) {
     optimum <- optimParallel(par=initial_params,
                              fn=mn_optim,
                              lower=rep(0, 7),
-                             upper = c(Inf, 1, 1, Inf, Inf, 1, Inf),
-                             control=list(maxit=150, trace=6, fnscale=25000000, parscale=p.scale),
+                             control=list(maxit=150, trace=6, fnscale=25000000),
                              parallel=list(cl=cl))
     residuals=mn_pred(optimum$par)
+    
     pars[[paste0("m",m,"n",n)]] = residuals
     print(paste("residuals for m=",m,", n=",n, "is ", residuals))
     stopCluster(cl)

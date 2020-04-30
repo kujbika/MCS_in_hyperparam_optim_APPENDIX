@@ -20,18 +20,18 @@ mn_optim <- function(parameter_values) {
       else {
         lagged = deSolve :: lagvalue(time - tau_q)[c(1, 2)]
       }
-      dS <- -(k*b*I+q*k*(1-b)*I_S)*S/N + (q*k*(1-b) * lagged[1] * lagged[2] )/N 
+      dS <- -(K*b*I+q*K*(1-b)*I_S)*S/N + (q*K*(1-b) * lagged[1] * lagged[2] )/N 
       
-      dS_Q <- (q*k*(1-b)*S*I_S)/N - (q*k*(1-b) * lagged[1] * lagged[2] )/N
+      dS_Q <- (q*K*(1-b)*S*I_S)/N - (q*K*(1-b) * lagged[1] * lagged[2] )/N
       
-      dE1 <- (k*b*(I - q*I_S))*S/N - m*sigma*E1
+      dE1 <- (K*b*(I - q*I_S))*S/N - m*sigma*E1
       
       if (time <= tau_d+1){
         lagged1 = rep(0,4)
         dEm = 0} #this is for E_m(t-tau_d)
       else {
         lagged1 = deSolve :: lagvalue(time - tau_d)[c(1,2,3,5)]
-        dEm <- (1/N)*k*b*(lagged1[3] - q*lagged1[2]) * lagged1[1] - m*sigma*lagged1[4]
+        dEm <- (1/N)*K*b*(lagged1[3] - q*lagged1[2]) * lagged1[1] - m*sigma*lagged1[4]
       }
        
       dP_I1 = P.gen(m, sigma, dEm, tau_d, n, gamma, 1)
@@ -54,10 +54,10 @@ mn_optim <- function(parameter_values) {
       
       dI <- dI_A + dI_S
       
-      dQ <- (q*k*b*S*I_S)/N + d_I*I_S
+      dQ <- (q*K*b*S*I_S)/N + d_I*I_S
       
       dR <- n*gamma*(I_A2 + I_S2)
-      dK <- -lambda * K
+      dK <- -(K-min_contract_size)/lambda
       return(list(c(dS, dI_S, dI, dS_Q, dE1, dI_A1, dI_A2,dI_S1, dI_S2, dI_A, dP_I1, dP_I2, dQ, dR, dK)))
     })
   }
@@ -84,12 +84,12 @@ mn_optim <- function(parameter_values) {
     y=initial_values,
     times=1:length(cases),
     func=mn_seir_equations,
-    parms = c(parameter_values, N=19450000, m=1, n=2, tau_q=14, d_I=1),
+    parms = c(parameter_values, N=19450000, m=1, n=2, tau_q=14),
     method = "impAdams",
     control = list(interpol=2)
   )
   out = as.data.frame(out)
-  return(sum(((out$I + out$Q + out$R) - cases)^2) / length(cases))
+  return(sum(((out$I_S + out$Q + out$R) - cases)^2) / length(cases))
 }
   
 mn_pred <- function(parameter_values) {
@@ -112,18 +112,18 @@ mn_pred <- function(parameter_values) {
       else {
         lagged = deSolve :: lagvalue(time - tau_q)[c(1, 2)]
       }
-      dS <- -(k*b*I+q*k*(1-b)*I_S)*S/N + (q*k*(1-b) * lagged[1] * lagged[2] )/N 
+      dS <- -(K*b*I+q*K*(1-b)*I_S)*S/N + (q*K*(1-b) * lagged[1] * lagged[2] )/N 
       
-      dS_Q <- (q*k*(1-b)*S*I_S)/N - (q*k*(1-b) * lagged[1] * lagged[2] )/N
+      dS_Q <- (q*K*(1-b)*S*I_S)/N - (q*K*(1-b) * lagged[1] * lagged[2] )/N
       
-      dE1 <- (k*b*(I - q*I_S))*S/N - m*sigma*E1
+      dE1 <- (K*b*(I - q*I_S))*S/N - m*sigma*E1
       
       if (time <= tau_d+1){
         lagged1 = rep(0,4)
         dEm = 0} #this is for E_m(t-tau_d)
       else {
         lagged1 = deSolve :: lagvalue(time - tau_d)[c(1,2,3,5)]
-        dEm <- (1/N)*k*b*(lagged1[3] - q*lagged1[2]) * lagged1[1] - m*sigma*lagged1[4]
+        dEm <- (1/N)*K*b*(lagged1[3] - q*lagged1[2]) * lagged1[1] - m*sigma*lagged1[4]
       }
        
       dP_I1 = P.gen(m, sigma, dEm, tau_d, n, gamma, 1)
@@ -146,11 +146,11 @@ mn_pred <- function(parameter_values) {
       
       dI <- dI_A + dI_S
       
-      dQ <- (q*k*b*S*I_S)/N + d_I*I_S
+      dQ <- (q*K*b*S*I_S)/N + d_I*I_S
       
       dR <- n*gamma*(I_A2 + I_S2)
       
-      dK <- -lambda * K
+      dK <- -(K-min_contract_size)/lambda
       return(list(c(dS, dI_S, dI, dS_Q, dE1, dI_A1, dI_A2,dI_S1, dI_S2, dI_A, dP_I1, dP_I2, dQ, dR, dK)))
     })
   }
@@ -180,7 +180,7 @@ mn_pred <- function(parameter_values) {
   method="impAdams",
   control=list(interpol=2)
   )
-  pred=tail(as.data.frame(out)[,c("I","Q", "R")], length(cases) * 0.75)
+  pred=tail(as.data.frame(out)[,c("I_S","Q", "R")], length(cases) * 0.75)
   residuals=apply(pred, 1, sum) - tail(cases, length(cases) * 0.75)
   return(residuals^2)
 }
