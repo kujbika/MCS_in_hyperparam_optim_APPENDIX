@@ -45,7 +45,7 @@ parameter_values <- c(
 )
 scale=c(1e-3, 0.05, 0.05, 0.1, 0.1, 0.2)
 p.scale=parscale.parameters(parameter_values, scale)
-
+vec=c(min_contract)
 
 pars <- vector(mode="list", length=25)
 vec = c()
@@ -64,7 +64,7 @@ for (m in 1:5) {
     cl <- makeCluster(detectCores())
     optimum <- optimParallel(par=initial_params,
                              fn=mn_optim,
-                             lower=rep(0, 7),
+                             lower=c(0.1,0.1, 0.001, 0.001, 0.05, 0.05, 0.001, 0.001),
                              control=list(maxit=150, trace=6, fnscale=25000000),
                              parallel=list(cl=cl))
     residuals=mn_pred(optimum$par)
