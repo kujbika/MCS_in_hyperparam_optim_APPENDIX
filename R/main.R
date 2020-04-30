@@ -6,7 +6,7 @@ path <- function(m,n) {
 
 
 parameter_values <- c(
-  k=350,
+  k=8000000,
   b=0.05,
   q=0.02,
   sigma=1,
@@ -16,18 +16,18 @@ parameter_values <- c(
 )
 
 
-pars <- vector(mode="list", length=25)
+pars <- vector(mode="list", length=4)
 vec = c()
-for (m in 1:5) {
-  for (n in 1:5) {
+for (m in 1:2) {
+  for (n in 1:2) {
     vec <- c(vec, paste0("m",m,"n",n))
   }
 }
 names(pars) <- vec
 
 
-for (m in 1:5) {
-  for (n in 1:5) {
+for (m in 1:2) {
+  for (n in 1:2) {
     source(path(m,n))
     initial_params = parameter_values
     cl <- makeCluster(detectCores())
@@ -44,6 +44,6 @@ for (m in 1:5) {
     
   }
 }
-Loss = as.data.frame(pars)
+/Loss = as.data.frame(pars)
 MCS <- MCSprocedure(Loss=Loss,alpha=0.2,B=5000,statistic='Tmax',cl=cl)
 
