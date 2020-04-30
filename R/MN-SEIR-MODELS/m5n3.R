@@ -18,7 +18,7 @@ mn_optim <- function(parameter_values) {
       if (time <= tau_q+1){
         lagged = rep(0, 2)} #this is for S(t-tau_q) and I_S(t-tauq)
       else {
-        lagged = deSolve :: lagvalue(time - tau_q)[c(1, 14)]
+        lagged = deSolve :: lagvalue(time - tau_q)[c(1, 2)]
       }
       dS <- -(k*b*I+q*k*(1-b)*I_S)*S/N + (q*k*(1-b) * lagged[1] * lagged[2] )/N 
       
@@ -38,7 +38,7 @@ mn_optim <- function(parameter_values) {
       if (time <= tau_d+1){
         lagged1 = rep(0,2)} #this is for E_m(t-tau_d)
       else {
-        lagged1 = deSolve :: lagvalue(time - tau_d)[c(6,7)]
+        lagged1 = deSolve :: lagvalue(time - tau_d)[c(8,9)]
       }
       
       dP_I1 = P.gen(m, sigma, m * sigma * (lagged1[1] - lagged1[2]), tau_d, n, gamma, 1)
@@ -69,11 +69,13 @@ mn_optim <- function(parameter_values) {
       
       dR <- n*gamma*(I_A3 + I_S3)
       
-      return(list(c(dS, dS_Q, dE1, dE2, dE3, dE4, dE5, dI_A1,dI_A2,dI_A3, dI_S1,dI_S2,dI_S3, dI_S, dI_A, dI, dP_I1, dP_I2, dP_I3, dQ, dR)))
+      return(list(c(dS, dI_S, dI, dS_Q, dE1, dE2, dE3, dE4, dE5, dI_A1,dI_A2,dI_A3, dI_S1,dI_S2,dI_S3, dI_A, dP_I1, dP_I2, dP_I3, dQ, dR)))
     })
   }
   initial_values <- c(
     S=762,
+    I_S = 1,
+    I=1,
     S_Q=0,
     E1 = 0,
     E2 = 0,
@@ -86,9 +88,7 @@ mn_optim <- function(parameter_values) {
     I_S1 = 1,
     I_S2 = 0,
     I_S3 = 0,
-    I_S = 1,
     I_A =0,
-    I=1,
     P_I1 = 0.0,
     P_I2 = 0.0,
     P_I3 = 0.0,
