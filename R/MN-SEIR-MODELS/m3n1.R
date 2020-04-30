@@ -50,8 +50,8 @@ mn_optim <- function(parameter_values) {
       dQ <- (q*k*b*S*I_S)/N + d_I*I_S
       
       dR <- n*gamma*(I_A1 + I_S1)
-      
-      return(list(c(dS,dI_S, dI, dS_Q, dE1, dE2, dE3, dI_A1, dI_S1, dI_A, dP_I1, dQ, dR)))
+      dK <- -lambda * K
+      return(list(c(dS,dI_S, dI, dS_Q, dE1, dE2, dE3, dI_A1, dI_S1, dI_A, dP_I1, dQ, dR, dK)))
     })
   }
   initial_values <- c(
@@ -67,7 +67,8 @@ mn_optim <- function(parameter_values) {
     I_A =0,
     P_I1 = 0.0,
     Q=0,
-    R=0
+    R=0,
+    K=50
   )
   cases=read.csv("curve.csv")$x
   cases=head(cases, length(cases) * 0.75)
@@ -75,7 +76,7 @@ mn_optim <- function(parameter_values) {
     y=initial_values,
     times=1:length(cases),
     func=mn_seir_equations,
-    parms = c(parameter_values, N=19450000, m=3, n=1, tau_q=14),
+    parms = c(parameter_values, N=19450000, m=3, n=1, tau_q=14, d_I=1),
     method = "impAdams",
     control = list(interpol=2)
   )
@@ -135,7 +136,8 @@ mn_pred <- function(parameter_values) {
       
       dR <- n*gamma*(I_A1 + I_S1)
       
-      return(list(c(dS,dI_S, dI, dS_Q, dE1, dE2, dE3, dI_A1, dI_S1, dI_A, dP_I1, dQ, dR)))
+      dK <- -lambda * K
+      return(list(c(dS,dI_S, dI, dS_Q, dE1, dE2, dE3, dI_A1, dI_S1, dI_A, dP_I1, dQ, dR, dK)))
     })
   }
   initial_values <- c(
@@ -151,7 +153,8 @@ mn_pred <- function(parameter_values) {
     I_A =0,
     P_I1 = 0.0,
     Q=0,
-    R=0
+    R=0,
+    K=50
   )
   cases=read.csv("curve.csv")$x
   out = deSolve :: dede(
