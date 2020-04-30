@@ -1,6 +1,5 @@
 library (MCS)
 data(Loss)
-MCS <- MCSprocedure(Loss=Loss,alpha=0.2,B=5000,statistic='Tmax',cl=NULL, verbose=T)
 summary(Loss[,1:5])
 
 rmse=function(real,...){

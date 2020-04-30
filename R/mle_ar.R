@@ -5,6 +5,7 @@ library(parallel)
 library(data.table)
 
 
+
 alpha <- 5
 phi <-  c(0.8, .25, -0.4, 0.1) # phi_1, phi_2, phi_3. order matters!
 isStationer <- function(phi) {
@@ -70,9 +71,9 @@ loss_values <- function(alpha, phi, sigma2) {
                     "loss_6" = NA,
                     "loss_7" = NA,
                     "loss_8" = NA)
-  for (k in 1:1000) 
+  for (k in 1:500) 
     {
-    y = arima.sim(n = 3000, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
+    y = arima.sim(n = 500, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
     resids = resid_generator(y, 1:8)
     loss = rbind(loss, c(resids))
   }

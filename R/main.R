@@ -1,5 +1,5 @@
 setwd("C:/Marci/CEU/ThesisDONTUSETHIS/CODE/R")
-
+library(MCS)
 path <- function(m,n) {
   return(paste0("MN-SEIR-MODELS/m", m, "n", n, ".R"))
 }
@@ -14,7 +14,18 @@ parameter_values <- c(
   d_I=0.5,
   tau_d = 2
 )
-res <- data.frame(matrix(rep(0, 25), nrow=5))
+
+
+pars <- vector(mode="list", length=25)
+vec = c()
+for (m in 1:5) {
+  for (n in 1:5) {
+    vec <- c(vec, paste0("m",m,"n",n))
+  }
+}
+names(pars) <- vec
+
+
 for (m in 1:5) {
   for (n in 1:5) {
     source(path(m,n))
@@ -26,11 +37,13 @@ for (m in 1:5) {
                              upper = c(700, 1, 1, Inf, Inf, 1, Inf),
                              control=list(maxit=150, trace=T, fnscale=1),
                              parallel=list(cl=cl))
-    res[m, n] = optimum$value
-    print(paste0("m is ",m,", n is ",n))
-    print(paste("rmse is ", optimum$value))
+    residuals=mn_pred(optimum$par)
+    pars[[paste0("m",m,"n",n)]] = residuals
+    print(paste("residuals for m=",m,", n=",n, "is ", residuals))
     stopCluster(cl)
     
   }
 }
+Loss = as.data.frame(pars)
+MCS <- MCSprocedure(Loss=Loss,alpha=0.2,B=5000,statistic='Tmax',cl=cl)
 
