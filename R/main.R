@@ -56,7 +56,7 @@ for (m in 1:5) {
 }
 names(pars) <- vec
 
-
+#lower=c(0.1,0.1, 0.001, 0.001, 0.05, 0.05, 0.001, 0.001),
 for (m in 1:5) {
   for (n in 1:5) {
     source(path(m,n))
@@ -64,7 +64,6 @@ for (m in 1:5) {
     cl <- makeCluster(detectCores())
     optimum <- optimParallel(par=initial_params,
                              fn=mn_optim,
-                             lower=c(0.1,0.1, 0.001, 0.001, 0.05, 0.05, 0.001, 0.001),
                              control=list(maxit=150, trace=6, fnscale=25000000),
                              parallel=list(cl=cl))
     residuals=mn_pred(optimum$par)
