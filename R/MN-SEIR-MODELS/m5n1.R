@@ -55,10 +55,9 @@ mn_optim <- function(parameter_values) {
       
       dQ <- (q*K*b*S*I_S)/N + d_I*I_S
       
-      dR_A <- n*gamma*I_A1
-      dR <- n*gamma*I_S1
+      dR <- n*gamma*(I_A1 + I_S1)
       dK <- -(K-min_contract_size)/lambda
-      return(list(c(dS, dI_S, dI, dS_Q, dE1, dE2, dE3, dE4, dE5, dI_A1, dI_S1, dI_A, dP_I1, dQ, dR, dK, dR_A)))
+      return(list(c(dS, dI_S, dI, dS_Q, dE1, dE2, dE3, dE4, dE5, dI_A1, dI_S1, dI_A, dP_I1, dQ, dR, dK)))
     })
   }
   initial_values <- c(
@@ -77,8 +76,7 @@ mn_optim <- function(parameter_values) {
     P_I1 = 0.0,
     Q=0,
     R=0,
-    K=50,
-    R_A=0
+    K=50
   )
   cases=read.csv("curve.csv")$x
   cases=head(cases, length(cases) * 0.75)
@@ -149,11 +147,10 @@ mn_pred <- function(parameter_values) {
       
       dQ <- (q*K*b*S*I_S)/N + d_I*I_S
       
-      dR_A <- n*gamma*I_A1
-      dR <- n*gamma*I_S1
+      dR <- n*gamma*(I_A1 + I_S1)
       
       dK <- -(K-min_contract_size)/lambda
-      return(list(c(dS, dI_S, dI, dS_Q, dE1, dE2, dE3, dE4, dE5, dI_A1, dI_S1, dI_A, dP_I1, dQ, dR, dK, dR_A)))
+      return(list(c(dS, dI_S, dI, dS_Q, dE1, dE2, dE3, dE4, dE5, dI_A1, dI_S1, dI_A, dP_I1, dQ, dR, dK)))
     })
   }
   initial_values <- c(
@@ -172,8 +169,7 @@ mn_pred <- function(parameter_values) {
     P_I1 = 0.0,
     Q=0,
     R=0,
-    K=50,
-    R_A=0
+    K=50
   )
   cases=read.csv("curve.csv")$x
   out = deSolve :: dede(

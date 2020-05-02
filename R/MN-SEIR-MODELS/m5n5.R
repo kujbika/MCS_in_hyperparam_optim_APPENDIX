@@ -79,10 +79,9 @@ mn_optim <- function(parameter_values) {
       
       dQ <- (q*K*b*S*I_S)/N + d_I*I_S
       
-      dR_A <- n*gamma*I_A5
-      dR <- n*gamma*I_S5
+      dR <- n*gamma*(I_A5 + I_S5)
       dK <- -(K-min_contract_size)/lambda
-      return(list(c(dS, dI_S, dI, dS_Q, dE1, dE2, dE3, dE4, dE5, dI_A1,dI_A2,dI_A3, dI_A4, dI_A5, dI_S1,dI_S2,dI_S3,dI_S4, dI_S5, dI_A, dP_I1, dP_I2, dP_I3, dP_I4, dP_I5, dQ, dR, dK, dR_A)))
+      return(list(c(dS, dI_S, dI, dS_Q, dE1, dE2, dE3, dE4, dE5, dI_A1,dI_A2,dI_A3, dI_A4, dI_A5, dI_S1,dI_S2,dI_S3,dI_S4, dI_S5, dI_A, dP_I1, dP_I2, dP_I3, dP_I4, dP_I5, dQ, dR, dK)))
     })
   }
   initial_values <- c(
@@ -113,8 +112,7 @@ mn_optim <- function(parameter_values) {
     P_I5 = 0.0,
     Q=0,
     R=0,
-    K=50,
-    R_A=0
+    K=50
   )
   cases=read.csv("curve.csv")$x
   x=head(cases, length(cases) * 0.75)
@@ -209,11 +207,10 @@ mn_pred <- function(parameter_values) {
       
       dQ <- (q*K*b*S*I_S)/N + d_I*I_S
       
-      dR_A <- n*gamma*I_A5
-      dR <- n*gamma*I_S5
+      dR <- n*gamma*(I_A5 + I_S5)
       
       dK <- -(K-min_contract_size)/lambda
-      return(list(c(dS, dI_S, dI, dS_Q, dE1, dE2, dE3, dE4, dE5, dI_A1,dI_A2,dI_A3, dI_A4, dI_A5, dI_S1,dI_S2,dI_S3,dI_S4, dI_S5, dI_A, dP_I1, dP_I2, dP_I3, dP_I4, dP_I5, dQ, dR,dK, dR_A)))
+      return(list(c(dS, dI_S, dI, dS_Q, dE1, dE2, dE3, dE4, dE5, dI_A1,dI_A2,dI_A3, dI_A4, dI_A5, dI_S1,dI_S2,dI_S3,dI_S4, dI_S5, dI_A, dP_I1, dP_I2, dP_I3, dP_I4, dP_I5, dQ, dR,dK)))
     })
   }
   initial_values <- c(
@@ -244,8 +241,7 @@ mn_pred <- function(parameter_values) {
     P_I5 = 0.0,
     Q=0,
     R=0,
-    K=50,
-    R_A=0
+    K=50
   )
   cases=read.csv("curve.csv")$x
   out = deSolve :: dede(
