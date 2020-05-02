@@ -56,6 +56,8 @@ Lloyd (2001) propose that a realistic or empirically provable distribution can b
 To incorporate contact tracing and isolation into the model, Wearing et al. (2005) proposed another extension of the model, while still dealing with gamma-distributed latent and infectious periods. In this model, isolation of newly infectious cases occurs at a daily rate <img src="svgs/6fb3ad53b9c3e50139eac4c41d03389d.svg?invert_in_darkmode" align=middle width=15.27633194999999pt height=22.831056599999986pt/> after a delay of <img src="svgs/6834db793eb4d3eefb92e28742316579.svg?invert_in_darkmode" align=middle width=18.28822049999999pt height=14.15524440000002pt/> days, which represents a period when infected individuals are infectious but asymptomatic or undetectable (<img src="svgs/feb77772a5a378cdcd84637b317d36f3.svg?invert_in_darkmode" align=middle width=17.11196189999999pt height=22.465723500000017pt/>).
 <br>
 A fraction of <img src="svgs/d5c18a8ca1894fd3a7d25f242cbe8890.svg?invert_in_darkmode" align=middle width=7.928106449999989pt height=14.15524440000002pt/> of those who had contact with an infectious and symptomatic person (<img src="svgs/b0287aa6bdc305956f5b6eeb1d0ef2e5.svg?invert_in_darkmode" align=middle width=15.92700119999999pt height=22.465723500000017pt/>) (but did not contract the infection) are remove to the quarantined susceptible class. An identical fraction of newly exposed individuals are also quarantined.
+<br>
+<img src="svgs/MN_SEIR.png?invert_in_darkmode">
 
 ---
 ## [MN-SEIR main equations]()
