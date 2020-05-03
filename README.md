@@ -5,3 +5,4 @@ Set approach. The repository is operated and maintained by Marcell Kujbus (marce
 <b> The working paper can be found here: </b><br>
 https://marcellkujbus.wixsite.com/mysite/projects
 <br>
+If any issue is found, please raise it, or open a Pull request. I will definitely check.
