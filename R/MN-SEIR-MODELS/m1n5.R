@@ -74,7 +74,7 @@ mn_optim <- function(parameter_values) {
       
       dQ <- (q*K*b*S*I_S)/N + d_I*I_S
       
-      dR <- n*gamma*(I_A2 + I_S2)
+      dR <- n*gamma*(I_A5 + I_S5)
       dK <- -(K-min_contract_size)/lambda
       return(list(c(dS, dI_S, dI, dS_Q, dE1, dI_A1, dI_A2, dI_A3, dI_A4, dI_A5, dI_S1, dI_S2, dI_S3, dI_S4, dI_S5, dI_A, dP_I1, dP_I2, dP_I3, dP_I4, dP_I5, dQ, dR, dK)))
     })

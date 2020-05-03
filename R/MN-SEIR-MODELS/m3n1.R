@@ -71,7 +71,7 @@ mn_optim <- function(parameter_values) {
     K=50
   )
   cases=read.csv("curve.csv")$x
-  cases=head(cases, length(cases) * 0.75)
+  cases=head(cases, length(cases) * 1)
   out = deSolve :: dede(
     y=initial_values,
     times=1:length(cases),
