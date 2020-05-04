@@ -239,7 +239,6 @@ mn_dataframe <- function(parameter_values) {
     method = "impAdams",
     control = list(interpol=2)
   )
-  return(out)
-  return(sum((out$I_S + out$Q + out$R - cases)^2) / length(cases))
-}
+  out=as.data.frame(out)
+  return(out)}
 

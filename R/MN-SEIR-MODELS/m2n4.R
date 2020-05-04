@@ -320,6 +320,7 @@ mn_dataframe <- function(parameter_values) {
     method = "impAdams",
     control = list(interpol=2)
   )
+  out=as.data.frame(out)
   return(out)
 }
 
