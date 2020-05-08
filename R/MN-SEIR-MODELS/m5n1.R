@@ -90,7 +90,7 @@ mn_optim <- function(parameter_values) {
     control = list(interpol=2)
   )
   out = as.data.frame(out)
-  return(sum((out$I_S + out$Q + out$R - cases)^2) / length(cases))
+  return(sum((out$I_S + out$Q + 0 - cases)^2) / length(cases))
 }
 
 mn_pred <- function(parameter_values) {
