@@ -46,9 +46,9 @@ mn_optim <- function(parameter_values) {
       
       dI <- dI_A + dI_S
       
-      dQ <- (q*K*b*S*I_S)/N + d_I*I_S
+      dQ <- -lagged[3] + (q*K*b*S*I_S)/N + d_I*I_S
       
-      dR <- n*gamma*(I_A1 + I_S1)
+      dR <- lagged[3] + n*gamma*(I_A1 + I_S1)
       dK <- -(K-min_contract_size)/lambda
       return(list(c(dS, dI_S, dI, dS_Q, dE1, dI_A1, dI_S1, dI_A, dP_I1, dQ, dR, dK)))
     })
@@ -67,7 +67,7 @@ mn_optim <- function(parameter_values) {
     R=0,
     K=50
   )
-  cases=read.csv("curve.csv")$x
+  cases=read.csv("curve.csv")$Active
   cases=head(cases, length(cases) * 0.75)
   out = deSolve :: dede(
     y=initial_values,
@@ -128,9 +128,9 @@ mn_pred <- function(parameter_values) {
       
       dI <- dI_A + dI_S
       
-      dQ <- (q*K*b*S*I_S)/N + d_I*I_S
+      dQ <- -lagged[3] + (q*K*b*S*I_S)/N + d_I*I_S
       
-      dR <- n*gamma*(I_A1 + I_S1)
+      dR <- lagged[3] + n*gamma*(I_A1 + I_S1)
       dK <- -(K-min_contract_size)/lambda
       return(list(c(dS, dI_S, dI, dS_Q, dE1, dI_A1, dI_S1, dI_A, dP_I1, dQ, dR, dK)))
     })
@@ -149,7 +149,7 @@ mn_pred <- function(parameter_values) {
     R=0,
     K=50
   )
-  cases=read.csv("curve.csv")$x
+  cases=read.csv("curve.csv")$Active
   out = deSolve :: dede(
     y=initial_values,
     times=1:length(cases),
@@ -209,9 +209,9 @@ mn_dataframe <- function(parameter_values) {
       
       dI <- dI_A + dI_S
       
-      dQ <- (q*K*b*S*I_S)/N + d_I*I_S
+      dQ <- -lagged[3] + (q*K*b*S*I_S)/N + d_I*I_S
       
-      dR <- n*gamma*(I_A1 + I_S1)
+      dR <- lagged[3] + n*gamma*(I_A1 + I_S1)
       dK <- -(K-min_contract_size)/lambda
       return(list(c(dS, dI_S, dI, dS_Q, dE1, dI_A1, dI_S1, dI_A, dP_I1, dQ, dR, dK)))
     })
@@ -230,7 +230,7 @@ mn_dataframe <- function(parameter_values) {
     R=0,
     K=50
   )
-  cases=read.csv("curve.csv")$x
+  cases=read.csv("curve.csv")$Active
   cases=head(cases, length(cases) * 1)
   out = deSolve :: dede(
     y=initial_values,

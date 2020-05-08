@@ -67,9 +67,9 @@ mn_optim <- function(parameter_values) {
       
       dI <- dI_A + dI_S
       
-      dQ <- (q*K*b*S*I_S)/N + d_I*I_S
+      dQ <- -lagged[3] + (q*K*b*S*I_S)/N + d_I*I_S
       
-      dR <- n*gamma*(I_A2 + I_S2)
+      dR <- lagged[3] + n*gamma*(I_A2 + I_S2)
       dK <- -(K-min_contract_size)/lambda
       return(list(c(dS, dI_S, dI, dS_Q, dE1, dI_A1, dI_A2, dI_A3, dI_A4, dI_S1, dI_S2, dI_S3, dI_S4, dI_A, dP_I1, dP_I2, dP_I3, dP_I4, dQ, dR, dK)))
     })
@@ -97,7 +97,7 @@ mn_optim <- function(parameter_values) {
     R=0,
     K=50
   )
-  cases=read.csv("curve.csv")$x
+  cases=read.csv("curve.csv")$Active
   cases=head(cases, length(cases) * 0.75)
   out = deSolve :: dede(
     y=initial_values,
@@ -178,9 +178,9 @@ mn_pred <- function(parameter_values) {
       
       dI <- dI_A + dI_S
       
-      dQ <- (q*K*b*S*I_S)/N + d_I*I_S
+      dQ <- -lagged[3] + (q*K*b*S*I_S)/N + d_I*I_S
       
-      dR <- n*gamma*(I_A2 + I_S2)
+      dR <- lagged[3] + n*gamma*(I_A2 + I_S2)
       
       dK <- -(K-min_contract_size)/lambda
       return(list(c(dS, dI_S, dI, dS_Q, dE1, dI_A1, dI_A2, dI_A3, dI_A4, dI_S1, dI_S2, dI_S3, dI_S4, dI_A, dP_I1, dP_I2, dP_I3, dP_I4, dQ, dR, dK)))
@@ -209,7 +209,7 @@ mn_pred <- function(parameter_values) {
     R=0,
     K=50
   )
-  cases=read.csv("curve.csv")$x
+  cases=read.csv("curve.csv")$Active
   out = deSolve :: dede(
   y=initial_values,
   times=1:length(cases),
@@ -289,9 +289,9 @@ mn_dataframe <- function(parameter_values) {
       
       dI <- dI_A + dI_S
       
-      dQ <- (q*K*b*S*I_S)/N + d_I*I_S
+      dQ <- -lagged[3] + (q*K*b*S*I_S)/N + d_I*I_S
       
-      dR <- n*gamma*(I_A2 + I_S2)
+      dR <- lagged[3] + n*gamma*(I_A2 + I_S2)
       dK <- -(K-min_contract_size)/lambda
       return(list(c(dS, dI_S, dI, dS_Q, dE1, dI_A1, dI_A2, dI_A3, dI_A4, dI_S1, dI_S2, dI_S3, dI_S4, dI_A, dP_I1, dP_I2, dP_I3, dP_I4, dQ, dR, dK)))
     })
@@ -319,7 +319,7 @@ mn_dataframe <- function(parameter_values) {
     R=0,
     K=50
   )
-  cases=read.csv("curve.csv")$x
+  cases=read.csv("curve.csv")$Active
   cases=head(cases, length(cases) * 1)
   out = deSolve :: dede(
     y=initial_values,
