@@ -64,12 +64,12 @@ mn_optim <- function(parameter_values) {
   initial_values <- c(
     S=9999998,
     I_S = 2,
-    I=1,
+    I=2,
     S_Q=0,
     E1 = 0,
     I_A1 = 0,
     I_A2 = 0,
-    I_S1 = 1,
+    I_S1 = 2,
     I_S2 = 0,
     I_A =0,
     P_I1 = 0.0,
@@ -157,12 +157,12 @@ mn_pred <- function(parameter_values) {
   initial_values <- c(
     S=9999998,
     I_S = 2,
-    I=1,
+    I=2,
     S_Q=0,
     E1 = 0,
     I_A1 = 0,
     I_A2 = 0,
-    I_S1 = 1,
+    I_S1 = 2,
     I_S2 = 0,
     I_A =0,
     P_I1 = 0.0,
@@ -180,8 +180,8 @@ mn_pred <- function(parameter_values) {
   method="impAdams",
   control=list(interpol=2)
   )
-  pred=tail(as.data.frame(out)[,c("I_S","Q", "R")], length(cases) * 0.75)
-  residuals=apply(pred, 1, sum) - tail(cases, length(cases) * 0.75)
+  pred=tail(as.data.frame(out)[,c("I_S","Q", "R")], length(cases) * 0.25)
+  residuals=apply(pred, 1, sum) - tail(cases, length(cases) * 0.25)
   return(residuals^2)
 }
 mn_dataframe <- function(parameter_values) {
@@ -248,12 +248,12 @@ mn_dataframe <- function(parameter_values) {
   initial_values <- c(
     S=9999998,
     I_S = 2,
-    I=1,
+    I=2,
     S_Q=0,
     E1 = 0,
     I_A1 = 0,
     I_A2 = 0,
-    I_S1 = 1,
+    I_S1 = 2,
     I_S2 = 0,
     I_A =0,
     P_I1 = 0.0,
