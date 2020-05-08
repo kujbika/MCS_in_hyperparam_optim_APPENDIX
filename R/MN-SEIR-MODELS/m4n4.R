@@ -106,7 +106,7 @@ mn_optim <- function(parameter_values) {
     y=initial_values,
     times=1:length(cases),
     func=mn_seir_equations,
-    parms = c(parameter_values, N=19450000, m=4, n=4, tau_q=14),
+    parms = c(parameter_values, N=10000000, m=4, n=4, tau_q=14),
     method = "impAdams",
     control = list(interpol=2)
   )
@@ -220,7 +220,7 @@ mn_pred <- function(parameter_values) {
   y=initial_values,
   times=1:length(cases),
   func=mn_seir_equations,
-  parms=c(parameter_values, N=19450000, m=4, n=4, tau_q=14),
+  parms=c(parameter_values, N=10000000, m=4, n=4, tau_q=14),
   method="impAdams",
   control=list(interpol=2)
   )
@@ -334,7 +334,7 @@ mn_dataframe <- function(parameter_values) {
     y=initial_values,
     times=1:length(cases),
     func=mn_seir_equations,
-    parms = c(parameter_values, N=19450000, m=4, n=4, tau_q=14),
+    parms = c(parameter_values, N=10000000, m=4, n=4, tau_q=14),
     method = "impAdams",
     control = list(interpol=2)
   )
