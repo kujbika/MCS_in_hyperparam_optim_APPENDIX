@@ -200,7 +200,7 @@ mn_pred <- function(parameter_values) {
   method="impAdams",
   control=list(interpol=2)
   )
-  pred=tail(as.data.frame(out)[,c("I_S","Q", "R")], length(cases) * 0.25)
+  pred=tail(as.data.frame(out)[,c("I_S","Q")], length(cases) * 0.25)
   residuals=apply(pred, 1, sum) - tail(cases, length(cases) * 0.25)
   return(residuals^2)
 }
