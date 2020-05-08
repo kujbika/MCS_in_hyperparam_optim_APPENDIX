@@ -17,8 +17,8 @@ isStationer <- function(phi) {
 }
 phi = isStationer(phi)
 sigma2 <- 1.2
-y = arima.sim(n = 1000, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
-
+y = arima.sim(n = 250, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
+auto.arima(y, stationary=T, start.p=4, start.q=0)
 
 estimator <- function(y, modelling_params) {
   row_number = length(y) - modelling_params + 1
@@ -39,23 +39,18 @@ resid_generator <- function(y, i_vec) {
   # y is the time series that follows an AR(p)
   # i_vec is a vector with the possible orders, e.g 1:8 if the real order is p=4
   resids = c()
+  preds=c()
   for (k in i_vec) {
     phi_k = estimator(y, k)[[1]]
     x = c(1,rev(y)[2:(k+1)])
     y_resid_k = (x %*% phi_k - rev(y)[1])^2
     resids = c(resids, y_resid_k)
+    p=c(1, rev(y)[1:(length(phi_k)-1)]) %*% phi_k
+    preds=c(preds, p)
   }
   
-  return (resids) }
+  return (list(resids, preds)) }
 
-grid_search <- function(alpha, phi, sigma2, i_vec) {
-  y = arima.sim(n = 2000, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
-  resids = resid_generator(y, i_vec)
-  phi_i = estimator(y, which.min(resids))
-  prediction = c(1, rev(y)[1:(length(phi_i[[1]])-1)]) %*% phi_i[[1]]
-  real = c(1, rev(y)[1:length(phi)]) %*% c(alpha, phi) + rnorm(1, 0, sigma2)
-  return ((prediction - real)^2)
-}
 
 
 loss_values <- function(alpha, phi, sigma2) {
@@ -71,16 +66,57 @@ loss_values <- function(alpha, phi, sigma2) {
                     "loss_6" = NA,
                     "loss_7" = NA,
                     "loss_8" = NA)
-  for (k in 1:500) 
+  preds = data.frame("pred_1" = NA,
+                    "pred_2" = NA,
+                    "pred_3" = NA,
+                    "pred_4" = NA,
+                    "pred_5" = NA,
+                    "pred_6" = NA,
+                    "pred_7" = NA,
+                    "pred_8" = NA)
+  for (k in 1:1000) 
     {
-    y = arima.sim(n = 500, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
-    resids = resid_generator(y, 1:8)
-    loss = rbind(loss, c(resids))
+    y = arima.sim(n = 1001, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
+    
+    resids = resid_generator(y[1:(length(y)-1)], 1:8)
+    loss = rbind(loss, c(resids[[1]]))
+    outsample = (resids[[2]] - tail(y, 1))^2
+    preds = rbind(preds, c(outsample))
+
   }
-  return (loss[-1,])
+  Loss=loss[-1,]
+  preds=preds[-1,]
+  grid_search_loss=c()
+  for (i in 1:nrow(Loss)) {
+    grid_search_loss=c(grid_search_loss, preds[i, which.min(Loss[i, ])])
+  }
+  
+  MCS_loss=(apply(preds, 2, sum)/nrow(preds))[4:8]
+  
+  return (list(grid_search_loss, MCS_loss))
 }
 
-a = loss_values(alpha, phi, sigma2)
+res=data.frame(matrix(0, nrow=500, ncol=2))
+names(res)=c("grid search loss", "MCS loss")
+for (i in 1:nrow(res)){
+  a=loss_values(alpha, phi, sigma2)
+  res[i, 1]=a[1]
+  res[i, 2]=a[2]
+}
+
+grid_search_loss=c()
+for (i in 1:nrow(Loss)) {
+  grid_search_loss=c(grid_search_loss, preds[i, which.min(Loss[i, ])])
+}
+
+a = data.frame(colMeans(preds))
+a$model=rownames(a)
+p=ggplot(data=a, aes(y=loss, x=model, group=1))+geom_line()
+
+mean(grid_search_loss)
+a=MCSprocedure(Loss, alpha=0.15, cl=cl)
+ggplot(data=preds)+
+
 cor(a)
 summary(a)
 
@@ -100,6 +136,6 @@ fit1
 #######mcs
 number_cores <- detectCores()
 cl <- makeCluster(number_cores)
-MCS <- MCSprocedure(Loss=a,alpha=0.2,B=5000,statistic='Tmax',cl=cl)
+MCS <- MCSprocedure(Loss=a,alpha=0.1,B=5000,statistic='Tmax',cl=cl)
 MCS
 

@@ -25,7 +25,8 @@ cases$`MCS prediction`=apply(cases[,c(3:ncol(cases))], 1, sum)/(ncol(cases)-2)
 summary(cases)
 
 
-
+df <- melt(cases ,  id.vars = 'Date', variable.name = 'series')
+p2=ggplot(df, aes(Date,value)) + geom_line(aes(colour = series))
 p <- ggplot(data=cases, aes(x=Date))+
   geom_line(aes(y=m3n4, colour="Grid search"))+
   geom_line(aes(y=`MCS prediction`, colour="MCS0.90"))+
@@ -42,8 +43,15 @@ p <- ggplot(data=cases, aes(x=Date))+
  
 p
 
-ggplotly(p, dynamicTicks = T)
+ggplotly(p2, dynamicTicks = T)
 
-matplot(t(cases), type = 'l', col = seq_len(nrow(df1)), xaxt = "n")
-legend("top", row.names(df1), col = seq_len(nrow(df1)), fill = seq_len(nrow(df1)))
-axis(1, at = seq_along(df1), labels = colnames(df1))
+plot(diff(cases$`MCS prediction`), type="l")
+lines(diff(cases$m3n4), type="l")
+lines(diff(cases$Actual), type="l")
+
+test=tail(cases, 8)
+resid_grid = (diff(test$m3n4) - diff(test$Actual))^2
+resid_mcs = (diff(test$`MCS prediction`)-diff(test$Actual))^2
+mean(resid_grid)
+mean(resid_mcs)
+t = mean(resid_mcs-resid_grid) / sqrt(var(resid_mcs-resid_grid))

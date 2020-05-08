@@ -84,7 +84,7 @@ mn_optim <- function(parameter_values) {
     control = list(interpol=2)
   )
   out = as.data.frame(out)
-  return(sum((out$I_S + out$Q + out$R - cases)^2) / length(cases))
+  return(sum((diff(out$I_S + out$Q + out$R) - diff(cases))^2) / length(cases))
 }
 
 mn_pred <- function(parameter_values) {
@@ -171,7 +171,7 @@ mn_pred <- function(parameter_values) {
   control=list(interpol=2)
   )
   pred=tail(as.data.frame(out)[,c("I_S","Q", "R")], length(cases) * 0.25)
-  residuals=apply(pred, 1, sum) - tail(cases, length(cases) * 0.25)
+  residuals=apply(pred, 1, function(x) sum(diff(x))) - tail(diff(cases), length(cases) * 0.25)
   return(residuals^2)
 }
 mn_dataframe <- function(parameter_values) {
