@@ -71,7 +71,7 @@ mn_optim <- function(parameter_values) {
     })
   }
   initial_values <- c(
-    S=19449999,
+    S=9999998,
     I_S = 1,
     I=1,
     S_Q=0,
@@ -180,7 +180,7 @@ mn_pred <- function(parameter_values) {
     })
   }
   initial_values <- c(
-    S=19449999,
+    S=9999998,
     I_S = 1,
     I=1,
     S_Q=0,
@@ -287,7 +287,7 @@ mn_dataframe <- function(parameter_values) {
     })
   }
   initial_values <- c(
-    S=19449999,
+    S=9999998,
     I_S = 1,
     I=1,
     S_Q=0,
