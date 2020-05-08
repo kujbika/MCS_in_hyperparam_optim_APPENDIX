@@ -16,9 +16,10 @@ mn_optim <- function(parameter_values) {
     
     with(as.list(c(variables, parameters)), {
       if (time <= tau_q+1){
-        lagged = rep(0, 2)} #this is for S(t-tau_q) and I_S(t-tauq)
+        lagged = rep(0, 3)} #this is for S(t-tau_q) and I_S(t-tauq)
       else {
-        lagged = deSolve :: lagvalue(time - tau_q)[c(1, 2)]
+        l = deSolve :: lagvalue(time - tau_q)
+        lagged = c(l[c(1, 2)], rev(l)[3])
       }
       dS <- -(K*b*I+q*K*(1-b)*I_S)*S/N + (q*K*(1-b) * lagged[1] * lagged[2] )/N 
       
@@ -123,9 +124,10 @@ mn_pred <- function(parameter_values) {
     
     with(as.list(c(variables, parameters)), {
       if (time <= tau_q+1){
-        lagged = rep(0, 2)} #this is for S(t-tau_q) and I_S(t-tauq)
+        lagged = rep(0, 3)} #this is for S(t-tau_q) and I_S(t-tauq)
       else {
-        lagged = deSolve :: lagvalue(time - tau_q)[c(1, 2)]
+        l = deSolve :: lagvalue(time - tau_q)
+        lagged = c(l[c(1, 2)], rev(l)[3])
       }
       dS <- -(K*b*I+q*K*(1-b)*I_S)*S/N + (q*K*(1-b) * lagged[1] * lagged[2] )/N 
       
@@ -229,9 +231,10 @@ mn_dataframe <- function(parameter_values) {
     
     with(as.list(c(variables, parameters)), {
       if (time <= tau_q+1){
-        lagged = rep(0, 2)} #this is for S(t-tau_q) and I_S(t-tauq)
+        lagged = rep(0, 3)} #this is for S(t-tau_q) and I_S(t-tauq)
       else {
-        lagged = deSolve :: lagvalue(time - tau_q)[c(1, 2)]
+        l = deSolve :: lagvalue(time - tau_q)
+      lagged = c(l[c(1, 2)], rev(l)[3])
       }
       dS <- -(K*b*I+q*K*(1-b)*I_S)*S/N + (q*K*(1-b) * lagged[1] * lagged[2] )/N 
       
