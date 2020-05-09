@@ -3,7 +3,7 @@ library(MASS)
 library (MCS)
 library(parallel)
 library(data.table)
-
+load("MLE_AR.RData")
 
 
 alpha <- 5
@@ -35,26 +35,51 @@ estimator <- function(y, modelling_params) {
 }
 estimator(y, 4) 
 #-------------------------------------------------------------
-resid_generator <- function(y, i_vec) {
-  # y is the time series that follows an AR(p)
-  # i_vec is a vector with the possible orders, e.g 1:8 if the real order is p=4
-  resids = c()
-  for (k in i_vec) {
-    phi_k = estimator(y, k)[[1]]
-    x = c(1,rev(y)[2:(k+1)])
-    y_resid_k = (x %*% phi_k - rev(y)[1])^2
-    resids = c(resids, y_resid_k)
+pred.n.ahead <- function(y, n.ahead, parms) {
+  
+  if (n.ahead == 0) {
+    return(y)
+  }else {
+    prediction = c(1, rev(y)[1:(length(parms)-1)]) %*% parms
+    return(pred.n.ahead(c(y, prediction), n.ahead - 1, parms))
   }
   
-  return (resids) }
+}
 
-grid_search <- function(alpha, phi, sigma2, i_vec) {
-  y = arima.sim(n = 2000, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
-  resids = resid_generator(y, i_vec)
-  phi_i = estimator(y, which.min(resids))
-  prediction = c(1, rev(y)[1:(length(phi_i[[1]])-1)]) %*% phi_i[[1]]
-  real = c(1, rev(y)[1:length(phi)]) %*% c(alpha, phi) + rnorm(1, 0, sigma2)
-  return ((prediction - real)^2)
+resid_generator <- function(y, i_vec, n.ahead) {
+  # y is the time series that follows an AR(p)
+  # i_vec is a vector with the possible orders, e.g 1:8 if the real order is p=4
+  pars <- vector(mode="list", length=length(i_vec))
+  names(pars) = i_vec
+  coeffs <- vector(mode="list", length=length(i_vec))
+  names(coeffs) = i_vec
+  u = head(y, length(y) - n.ahead)
+  for (k in i_vec) {
+    parms <- estimator(u, i)
+    forecast = pred.n.ahead(u, n.ahead, parms[[1]])
+    coeffs[[k]] = parms
+    pars[[k]] = (tail(forecast, n.ahead) - tail(y, n.ahead))^2
+  }
+  return (list(as.data.frame(pars), coeffs)) }
+
+y = arima.sim(n = 1000, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
+df = resid_generator(y, 1:8, 20)
+cl=makeCluster(detectCores())
+MCSprocedure(df[[1]], alpha=0.1, cl=cl)
+stopCluster(cl)
+
+grid_search <- function(y, n.ahead, i_vec) {
+  df_list = resid_generator(y, i_vec, n.ahead)
+  best = which.min(apply(df_list[[1]], 2, sum))
+  return(df_list[[2]][[best]])
+}
+
+grid_search_forecast_error <- function(y, n.ahead, test.period, i_vec) {
+  u = head(y, length(y) - test.period)
+  parms = grid_search(u, n.ahead, i_vec)
+  forecast = pred.n.ahead(head(u, length(u) - n.ahead), n.ahead+test.period, parms[[1]])
+  return((tail(forecast, test.period) - tail(y, test.period))^2)
+  
 }
 
 
