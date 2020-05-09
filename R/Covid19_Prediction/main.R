@@ -1,4 +1,4 @@
-setwd("C:/Marci/CEU/ThesisDONTUSETHIS/CODE/R")
+setwd("C:/Marci/CEU/ThesisDONTUSETHIS/CODE/R/Covid19_Prediction")
 library(MCS)
 library(optimParallel)
 path <- function(m,n) {
