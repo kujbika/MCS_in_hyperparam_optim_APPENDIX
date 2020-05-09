@@ -39,7 +39,8 @@ for (m in 1:5) {
     cl <- makeCluster(detectCores())
     optimum <- optimParallel(par=initial_params,
                              fn=mn_optim,
-                             lower=rep(0,7),
+                             lower=rep(0,9),
+                             upper=c(Inf, Inf, 1, 1, rep(Inf, 5)),
                              control=list(maxit=150, trace=6, fnscale=250000000),
                              parallel=list(cl=cl))
     residuals=mn_pred(optimum$par)
