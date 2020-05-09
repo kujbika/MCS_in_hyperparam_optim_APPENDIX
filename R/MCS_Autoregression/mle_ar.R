@@ -55,7 +55,7 @@ resid_generator <- function(y, i_vec, n.ahead) {
   names(coeffs) = i_vec
   u = head(y, length(y) - n.ahead)
   for (k in i_vec) {
-    parms <- estimator(u, i)
+    parms <- estimator(u, k)
     forecast = pred.n.ahead(u, n.ahead, parms[[1]])
     coeffs[[k]] = parms
     pars[[k]] = (tail(forecast, n.ahead) - tail(y, n.ahead))^2
@@ -63,10 +63,13 @@ resid_generator <- function(y, i_vec, n.ahead) {
   return (list(as.data.frame(pars), coeffs)) }
 
 y = arima.sim(n = 1000, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
-df = resid_generator(y, 1:8, 20)
+df = resid_generator(y, 1:8, 16)
 cl=makeCluster(detectCores())
-MCSprocedure(df[[1]], alpha=0.1, cl=cl)
+MCSprocedure(df[[1]], alpha=0.05, cl=cl)
 stopCluster(cl)
+df2 <- melt(cbind(1:16, df[[1]]),  id.vars = '1:16', variable.name = 'series')
+ggplot(df2, aes(`1:16`,value)) + geom_line(aes(colour = series))
+
 
 grid_search <- function(y, n.ahead, i_vec) {
   df_list = resid_generator(y, i_vec, n.ahead)
