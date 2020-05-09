@@ -13,6 +13,7 @@ parameter_values <- c(
   sigma=1/5,
   gamma=1/14,
   tau_d=1,
+  tau_i=14,
   d_I=1
 )
 

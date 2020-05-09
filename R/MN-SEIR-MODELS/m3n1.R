@@ -19,7 +19,7 @@ mn_optim <- function(parameter_values) {
         lagged = rep(0, 3)} #this is for S(t-tau_q) and I_S(t-tauq)
       else {
         l = deSolve :: lagvalue(time - tau_q)
-        lagged = c(l[c(1, 2)], rev(l)[3])
+        lagged = l[c(1, 2)]
       }
       dS <- -(K*b*I+q*K*(1-b)*I_S)*S/N + (q*K*(1-b) * lagged[1] * lagged[2] )/N 
       
@@ -48,9 +48,15 @@ mn_optim <- function(parameter_values) {
       
       dI = dI_A + dI_S
       
-      dQ <- -lagged[3] + (q*K*b*S*I_S)/N + d_I*I_S
+    if (time <= tau_i + 2) {
+        lagged2 = 0 }
+    else {
+        l = deSolve :: lagvalue(time - tau_i)
+        l2 = deSolve :: lagvalue(time - tau_i - 1)
+        lagged2 = rev(l)[3] - rev(l2)[3]}
+      dQ <- -lagged2 + (q*K*b*S*I_S)/N + d_I*I_S
       
-      dR <- lagged[3] + n*gamma*(I_A1 + I_S1)
+      dR <- lagged2 + n*gamma*(I_A1 + I_S1)
       dK <- -(K-min_contract_size)/lambda
       return(list(c(dS,dI_S, dI, dS_Q, dE1, dE2, dE3, dI_A1, dI_S1, dI_A, dP_I1, dQ, dR, dK)))
     })
@@ -105,7 +111,7 @@ mn_pred <- function(parameter_values) {
         lagged = rep(0, 3)} #this is for S(t-tau_q) and I_S(t-tauq)
       else {
         l = deSolve :: lagvalue(time - tau_q)
-        lagged = c(l[c(1, 2)], rev(l)[3])
+        lagged = l[c(1, 2)]
       }
       dS <- -(K*b*I+q*K*(1-b)*I_S)*S/N + (q*K*(1-b) * lagged[1] * lagged[2] )/N 
       
@@ -134,9 +140,15 @@ mn_pred <- function(parameter_values) {
       
       dI = dI_A + dI_S
       
-      dQ <- -lagged[3] + (q*K*b*S*I_S)/N + d_I*I_S
+    if (time <= tau_i + 2) {
+        lagged2 = 0 }
+    else {
+        l = deSolve :: lagvalue(time - tau_i)
+        l2 = deSolve :: lagvalue(time - tau_i - 1)
+        lagged2 = rev(l)[3] - rev(l2)[3]}
+      dQ <- -lagged2 + (q*K*b*S*I_S)/N + d_I*I_S
       
-      dR <- lagged[3] + n*gamma*(I_A1 + I_S1)
+      dR <- lagged2 + n*gamma*(I_A1 + I_S1)
       
       dK <- -(K-min_contract_size)/lambda
       return(list(c(dS,dI_S, dI, dS_Q, dE1, dE2, dE3, dI_A1, dI_S1, dI_A, dP_I1, dQ, dR, dK)))
@@ -190,7 +202,7 @@ mn_dataframe <- function(parameter_values) {
         lagged = rep(0, 3)} #this is for S(t-tau_q) and I_S(t-tauq)
       else {
         l = deSolve :: lagvalue(time - tau_q)
-      lagged = c(l[c(1, 2)], rev(l)[3])
+      lagged = l[c(1, 2)]
       }
       dS <- -(K*b*I+q*K*(1-b)*I_S)*S/N + (q*K*(1-b) * lagged[1] * lagged[2] )/N 
       
@@ -219,9 +231,15 @@ mn_dataframe <- function(parameter_values) {
       
       dI = dI_A + dI_S
       
-      dQ <- -lagged[3] + (q*K*b*S*I_S)/N + d_I*I_S
+    if (time <= tau_i + 2) {
+        lagged2 = 0 }
+    else {
+        l = deSolve :: lagvalue(time - tau_i)
+        l2 = deSolve :: lagvalue(time - tau_i - 1)
+        lagged2 = rev(l)[3] - rev(l2)[3]}
+      dQ <- -lagged2 + (q*K*b*S*I_S)/N + d_I*I_S
       
-      dR <- lagged[3] + n*gamma*(I_A1 + I_S1)
+      dR <- lagged2 + n*gamma*(I_A1 + I_S1)
       dK <- -(K-min_contract_size)/lambda
       return(list(c(dS,dI_S, dI, dS_Q, dE1, dE2, dE3, dI_A1, dI_S1, dI_A, dP_I1, dQ, dR, dK)))
     })
