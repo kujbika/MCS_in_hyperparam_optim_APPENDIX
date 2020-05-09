@@ -41,7 +41,7 @@ for (m in 1:5) {
                              fn=mn_optim,
                              lower=rep(0,9),
                              upper=c(Inf, Inf, 1, 1, rep(Inf, 5)),
-                             control=list(maxit=150, trace=6, fnscale=250000000),
+                             control=list(maxit=150, trace=T, fnscale=250),
                              parallel=list(cl=cl))
     residuals=mn_pred(optimum$par)
     
