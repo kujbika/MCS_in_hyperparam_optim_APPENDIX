@@ -49,9 +49,9 @@ The Model Confidence Set was pioneered by Hansen et al (2011) (link the title th
 To shed light on the greatness of the MCS, I have chosen to model an autoregression. Such a process has very interesting properties, which are
 discussed in the working paper.
 An autoregression is a special type of a discrete stochastic model, i.e.:
-1. 1. The process follows an autoregressive trend, with parameter <img src="svgs/11e61a359d52e3bfa3ec5181155ae86a.svg?invert_in_darkmode" align=middle width=40.233883799999994pt height=22.648391699999998pt/>, meaning, <img src="svgs/d234ba5ba657a1cc39a47519278e0836.svg?invert_in_darkmode" align=middle width=258.10724939999994pt height=22.831056599999986pt/>,where <img src="svgs/0873212143ac1e5a70429ffaf2a064b3.svg?invert_in_darkmode" align=middle width=155.77262249999998pt height=26.76175259999998pt/> and <img src="svgs/f124b6dc8c466a019ebc0074531368e0.svg?invert_in_darkmode" align=middle width=176.87873609999997pt height=26.76175259999998pt/> are fixed constants.
+1. The process follows an autoregressive trend, with parameter <img src="svgs/11e61a359d52e3bfa3ec5181155ae86a.svg?invert_in_darkmode" align=middle width=40.233883799999994pt height=22.648391699999998pt/>, meaning, <img src="svgs/d234ba5ba657a1cc39a47519278e0836.svg?invert_in_darkmode" align=middle width=258.10724939999994pt height=22.831056599999986pt/>,where <img src="svgs/0873212143ac1e5a70429ffaf2a064b3.svg?invert_in_darkmode" align=middle width=155.77262249999998pt height=26.76175259999998pt/> and <img src="svgs/f124b6dc8c466a019ebc0074531368e0.svg?invert_in_darkmode" align=middle width=176.87873609999997pt height=26.76175259999998pt/> are fixed constants.
 2. To have stationary results suppose that the roots of the characteristic polynomial <img src="svgs/377c0952351dc741fc3b9e4ee16ab167.svg?invert_in_darkmode" align=middle width=217.42239419999996pt height=24.65753399999998pt/> lie within the unit circle and so, there exists a stationary solution Y_{t} of the equation. If that holds, <img src="svgs/b1aa42c312b171936c1c367a558ffd06.svg?invert_in_darkmode" align=middle width=270.63248684999996pt height=47.67709980000001pt/>.
-3. 3. For every <img src="svgs/d1a177d007705974655aecd1ffe42d4c.svg?invert_in_darkmode" align=middle width=35.29127414999999pt height=22.831056599999986pt/>, <img src="svgs/2051930497302ad0342da3215a011b9b.svg?invert_in_darkmode" align=middle width=66.83976419999999pt height=22.648391699999998pt/>, so the process is homoskedastic and the error terms are uncorrelated.
+3. For every <img src="svgs/d1a177d007705974655aecd1ffe42d4c.svg?invert_in_darkmode" align=middle width=35.29127414999999pt height=22.831056599999986pt/>, <img src="svgs/2051930497302ad0342da3215a011b9b.svg?invert_in_darkmode" align=middle width=66.83976419999999pt height=22.648391699999998pt/>, so the process is homoskedastic and the error terms are uncorrelated.
 ---
 
 ## [Modelling assumptions]()
@@ -61,6 +61,7 @@ Our modeling assumption are the followings:
 3. The loss function is the <img src="svgs/394a677fe2755b93c575dfb3eeb8c276.svg?invert_in_darkmode" align=middle width=17.73978854999999pt height=22.465723500000017pt/>-norm.
 
 ---
+
 ## [Maximum likelihood estimators]()
 
 In the working paper, I derive the maximum likelihood estimators for all the parameters of an autoregression.
@@ -69,6 +70,8 @@ Let <img src="svgs/7c731ec0dbeddc962abc9c743c64fbbf.svg?invert_in_darkmode" alig
 Let <img src="svgs/55a049b8f161ae7cfeb0197d75aff967.svg?invert_in_darkmode" align=middle width=9.86687624999999pt height=14.15524440000002pt/> be the cardinality of the set of hyperparameters. Let <img src="svgs/c412b371cf52c0a890baf7d01bfc506d.svg?invert_in_darkmode" align=middle width=175.82162399999999pt height=27.6567522pt/> and <img src="svgs/058501d883680bef9b6d430b1778e0aa.svg?invert_in_darkmode" align=middle width=219.78238094999995pt height=27.6567522pt/>. Furthermore let <img src="svgs/18af9f618583576c228a72d9712da005.svg?invert_in_darkmode" align=middle width=180.37616849999998pt height=27.6567522pt/>.
 <br>
 In that case <img src="svgs/d1bc722dfb2752bd7fd4aebcce4e2d22.svg?invert_in_darkmode" align=middle width=145.88814735pt height=38.245416pt/> and <img src="svgs/9a4564bc719354a8852c5724dc27df22.svg?invert_in_darkmode" align=middle width=163.7911341pt height=43.0457412pt/>.
+
+
 ---
 
 ## [Figures]()
