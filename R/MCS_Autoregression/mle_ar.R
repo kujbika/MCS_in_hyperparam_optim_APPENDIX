@@ -34,6 +34,9 @@ estimator <- function(y, modelling_params) {
   sigma2_est =  (1/row_number) * t(head(rev(y), row_number-1) - X %*% phi) %*% (head(rev(y), row_number-1) - X %*% phi)
   return (list(phi, sigma2_est))
 }
+# for example run the following
+y = arima.sim(n = 100, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
+estimator(y, 4)
 #-------------------------------------------------------------
 pred.n.ahead <- function(y, n.ahead, parms) {
   ### n ahead prediction based on given parameters
@@ -45,9 +48,13 @@ pred.n.ahead <- function(y, n.ahead, parms) {
   }
   
 }
+# for example run the following
+y = arima.sim(n = 10, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
+pred.n.ahead(y, 1, estimator(y, 3)[[1]])
 
+#-------------------------------------------------------------
 resid_generator <- function(y, i_vec, n.ahead) {
-  ### y is the time series that follows an AR(p)
+  ### y is the autoregression
   ### i_vec is a vector with the possible orders, e.g 1:8 if the real order is p=4
   ### returns n.ahead prediction residual terms
   pars <- vector(mode="list", length=length(i_vec))
@@ -62,17 +69,24 @@ resid_generator <- function(y, i_vec, n.ahead) {
     pars[[k]] = (tail(forecast, n.ahead) - tail(y, n.ahead))^2
     }
   return (list(as.data.frame(pars), coeffs)) }
+#for example run the following
+y = arima.sim(n = 100, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
+a = resid_generator(y, 1:8, 3)
+a[[1]]
+a[[2]]
 
-#research
-n.ahead=20
-y = arima.sim(n = 1000, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
+#different losses and MCS
+n.ahead=10
+y = arima.sim(n = 3000, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
 df = resid_generator(y, 1:8, n.ahead)
 d=apply(df[[1]], 2, mean)
 cl=makeCluster(detectCores())
 MCSprocedure(df[[1]], alpha=0.1, cl=cl)
 stopCluster(cl)
-df2 <- melt(cbind(1:n.ahead, df[[1]]),  id.vars = "1:n.ahead", variable.name = 'series')
-ggplot(df2, aes(`1:n.ahead`,value)) + geom_line(aes(colour = series))
+names(df[[1]])=paste0(1:8)
+df2 <- melt(cbind(1:n.ahead, df[[1]]),  id.vars = "1:n.ahead", variable.name = 'modeled order')
+ggplot(df2, aes(`1:n.ahead`,value)) + geom_line(aes(colour = `modeled order`))+
+  labs(x='n ahead', y="loss")
 
 #--------------------------------------
 grid_search <- function(y, n.ahead, i_vec) {
@@ -80,51 +94,58 @@ grid_search <- function(y, n.ahead, i_vec) {
   ### returns the best coefficients, and all the others as well
   df_list = resid_generator(y, i_vec, n.ahead)
   best = which.min(apply(df_list[[1]], 2, sum))
-  return(list(df_list[[2]][[best]], df_list[[2]]))
+  return(list(df_list[[2]][[best]], df_list))
 }
+#for example run the following
+y = arima.sim(n = 1000, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
+a = grid_search(y, 40, 1:8)
+a[[1]]
+apply(a[[2]][[1]], 2, mean) #indeed, grid search chooes the minimum one
+
 
 forecast_errors <- function(y, n.ahead, test.period, i_vec) {
   ### final comparison based on grid search and MCS predictions
   u = head(y, length(y) - test.period)
   parms = grid_search(u, n.ahead, i_vec)
   forecast_grid = pred.n.ahead(u, test.period, parms[[1]][[1]])
+  error_grid = (tail(forecast_grid, test.period) - tail(y, test.period))^2
+  
   forecast_MCS = vector(mode="list", length=length(i_vec))
   names(forecast_MCS) = i_vec
   for (k in i_vec) {
-    forecast_MCS[[k]] =pred.n.ahead(u, test.period, parms[[2]][[k]][[1]])
+    forecast_MCS[[k]] =pred.n.ahead(u, test.period, parms[[2]][[2]][[k]][[1]])
   }
   forecast_MCS = as.data.frame(forecast_MCS)
-  error_grid = (tail(forecast_grid, test.period) - tail(y, test.period))^2
-  error_MCS = tail(apply(forecast_MCS, 2, function(x) x - y), test.period)
+  error_MCS = tail(apply(forecast_MCS, 2, function(x) x-y), test.period)
   error_MCS = apply(error_MCS, 1, function(x) mean(x))^2
   return(list(mean(error_grid), mean(error_MCS)))
   
 }
+#for example run
+n.ahed = 40
+test.period=1
+i_vec=1:8
+y = arima.sim(n = 1000, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
+forecast_errors(y, 1, 1, 1:8)
+
+#--------------------------------
+#actual research
+phi <-  c(0.8, .25, -0.4, 0.1, -0.3, 0.2, 0.2, -0.1, -0.05, 0.15)
+phi = isStationer(phi)
 comparison = vector(mode="list", length=2)
 errs = as.data.frame(comparison)
-
-  i=1.2
-  for (j in 1:1000) {
-    y = arima.sim(n = 100, list(ar=c(phi)), sd=sqrt(i), mean=alpha)
-    err = as.data.frame(forecast_errors(y, 20, 16, 1:8))
-    names(err)=c("grid", "MCS")
-    errs = rbind(errs, as.data.frame(err))
-    if(j %% 10==0) print(j)
+for (j in 1:250) {
+  y = arima.sim(n = 2000, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
+  err = as.data.frame(forecast_errors(y, 1, 1, 1:20))
+  names(err)=c("grid", "MCS")
+  errs = rbind(errs, as.data.frame(err))
+  if(j %% 10==0) print(j)
   }
 t = mean(errs$MCS-errs$grid)/sqrt(var((errs$MCS-errs$grid)))
+t
 errs$diff = errs$MCS < errs$grid
 sum(errs$diff)
-
-mins = apply(a, 1, min)
-mins = data.table("minimal observed losses"= mins)
-mins$`minimal observed losses`=as.numeric(mins$`minimal observed losses`)
-ggplot(mins, aes(x=`minimal observed losses`)) + 
-  geom_histogram(aes(y=..density..), color="darkblue", fill="lightblue")+
-  geom_density(alpha=.2, fill="#FF6666")+
-  geom_vline(aes(xintercept=mean(`minimal observed losses`)),
-             color="blue", linetype="dashed", size=1)
-fit1 <- fitdistr(mins$`minimal observed losses`, "exponential")
-ks.test(mins$`minimal observed losses`, "pexp", fit1$estimate)
-fit1
+var(errs$MCS)
+var(errs$grid)
 
 
