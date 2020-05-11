@@ -3,7 +3,7 @@ library(MASS)
 library (MCS)
 library(parallel)
 library(data.table)
-
+library(plotly)
 #parameter declarations for the AR process
 #alpha is the intercept, phi is the coeff vector. Phi can be any long
 #sigma2 is the variance
@@ -76,8 +76,8 @@ a[[1]]
 a[[2]]
 
 #different losses and MCS
-n.ahead=10
-y = arima.sim(n = 3000, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
+n.ahead=6
+y = arima.sim(n = 1000, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
 df = resid_generator(y, 1:8, n.ahead)
 d=apply(df[[1]], 2, mean)
 cl=makeCluster(detectCores())
@@ -85,9 +85,10 @@ MCSprocedure(df[[1]], alpha=0.1, cl=cl)
 stopCluster(cl)
 names(df[[1]])=paste0(1:8)
 df2 <- melt(cbind(1:n.ahead, df[[1]]),  id.vars = "1:n.ahead", variable.name = 'modeled order')
-ggplot(df2, aes(`1:n.ahead`,value)) + geom_line(aes(colour = `modeled order`))+
+p4=ggplot(df2, aes(`1:n.ahead`,value)) + geom_line(aes(colour = `modeled order`))+
   labs(x='n ahead', y="loss")
-
+p4
+ggplotly(p4, dynamicTicks=T)
 #--------------------------------------
 grid_search <- function(y, n.ahead, i_vec) {
   ### choses the parameter that has produced the minimal loss
@@ -103,17 +104,18 @@ a[[1]]
 apply(a[[2]][[1]], 2, mean) #indeed, grid search chooes the minimum one
 
 
-forecast_errors <- function(y, n.ahead, test.period, i_vec) {
+forecast_errors <- function(y, n.ahead, test.period, i_vec, real.order) {
   ### final comparison based on grid search and MCS predictions
+  ### i_vec is the grid in increasing order
   u = head(y, length(y) - test.period)
   parms = grid_search(u, n.ahead, i_vec)
   forecast_grid = pred.n.ahead(u, test.period, parms[[1]][[1]])
   error_grid = (tail(forecast_grid, test.period) - tail(y, test.period))^2
-  
-  forecast_MCS = vector(mode="list", length=length(i_vec))
-  names(forecast_MCS) = i_vec
-  for (k in i_vec) {
-    forecast_MCS[[k]] =pred.n.ahead(u, test.period, parms[[2]][[2]][[k]][[1]])
+  mcs_i = tail(i_vec, sum(i_vec >= real.order))
+  forecast_MCS = vector(mode="list", length=length(mcs_i))
+  names(forecast_MCS) = mcs_i
+  for (k in mcs_i) {
+    forecast_MCS[[k-real.order+1]]= pred.n.ahead(u, test.period, parms[[2]][[2]][[k-real.order+1]][[1]])
   }
   forecast_MCS = as.data.frame(forecast_MCS)
   error_MCS = tail(apply(forecast_MCS, 2, function(x) x-y), test.period)
@@ -122,30 +124,34 @@ forecast_errors <- function(y, n.ahead, test.period, i_vec) {
   
 }
 #for example run
-n.ahed = 40
+n.ahead = 10
 test.period=1
 i_vec=1:8
-y = arima.sim(n = 1000, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
-forecast_errors(y, 1, 1, 1:8)
+real.order = length(phi)
+y = arima.sim(n = 5000, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
+forecast_errors(y, 1, 1, 1:8, real.order)
 
 #--------------------------------
 #actual research
-phi <-  c(0.8, .25, -0.4, 0.1, -0.3, 0.2, 0.2, -0.1, -0.05, 0.15)
-phi = isStationer(phi)
-comparison = vector(mode="list", length=2)
-errs = as.data.frame(comparison)
-for (j in 1:250) {
-  y = arima.sim(n = 2000, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
-  err = as.data.frame(forecast_errors(y, 1, 1, 1:20))
-  names(err)=c("grid", "MCS")
-  errs = rbind(errs, as.data.frame(err))
-  if(j %% 10==0) print(j)
-  }
-t = mean(errs$MCS-errs$grid)/sqrt(var((errs$MCS-errs$grid)))
-t
-errs$diff = errs$MCS < errs$grid
-sum(errs$diff)
-var(errs$MCS)
-var(errs$grid)
 
+real.order = length(phi)
+results = data.frame(matrix(0, nrow=250, ncol=2))
+names(results) = c("grid search loss", "MCS loss")
+for (l in 1:nrow(results)) {
+  comparison = vector(mode="list", length=2)
+  errs = as.data.frame(comparison)
+  for (j in 1:1000) {
+    y = arima.sim(n = 1000, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
+    err = as.data.frame(forecast_errors(y, 1, 1, 1:8, real.order))
+    names(err)=c("grid", "MCS")
+    errs = rbind(errs, as.data.frame(err))
+  }
+  results[i,]=apply(errs, 2, mean)
+  if(i %% 10==0) print(i)
+  
+}
+#t = mean(results$MCS-errs$grid)/sqrt(var((errs$MCS-errs$grid)))
+#t
+#pt(t, df = 99999)
+#errs$diff = errs$MCS < errs$grid
 
