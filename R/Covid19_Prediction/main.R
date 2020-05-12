@@ -1,4 +1,3 @@
-setwd("C:/Marci/CEU/ThesisDONTUSETHIS/CODE/R/Covid19_Prediction")
 load("covidPred_secondoptim.RData")
 library(MCS)
 library(optimParallel)

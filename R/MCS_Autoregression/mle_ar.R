@@ -1,3 +1,4 @@
+load("MLE_AR.RData")
 library(ggplot2)
 library(MASS)
 library (MCS)
@@ -131,27 +132,63 @@ real.order = length(phi)
 y = arima.sim(n = 5000, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
 forecast_errors(y, 1, 1, 1:8, real.order)
 
+
 #--------------------------------
 #actual research
 
 real.order = length(phi)
 results = data.frame(matrix(0, nrow=250, ncol=2))
 names(results) = c("grid search loss", "MCS loss")
+#mean comparison
 for (l in 1:nrow(results)) {
   comparison = vector(mode="list", length=2)
   errs = as.data.frame(comparison)
   for (j in 1:1000) {
     y = arima.sim(n = 1000, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
-    err = as.data.frame(forecast_errors(y, 1, 1, 1:8, real.order))
-    names(err)=c("grid", "MCS")
+    err = as.data.frame(forecast_errors(y, 1, 10, 1:8, real.order))
+    names(err)=c("grid search loss", "MCS loss")
     errs = rbind(errs, as.data.frame(err))
   }
-  results[i,]=apply(errs, 2, mean)
-  if(i %% 10==0) print(i)
-  
+  results[l,]=apply(errs, 2, mean)
+  if(l %% 10==0) print(l)
 }
-#t = mean(results$MCS-errs$grid)/sqrt(var((errs$MCS-errs$grid)))
-#t
-#pt(t, df = 99999)
-#errs$diff = errs$MCS < errs$grid
+t = mean(results$MCS-results$grid)/(sqrt(var((results$MCS-results$grid))) / sqrt(250))
+t
+pt(t, df = 249)
+t = mean(results$MCS-sigma2)/(sqrt(var((results$MCS))) / sqrt(250))
+pt(t, df = 249)
 
+p = ggplot(data = results, aes(x=`grid search loss`, y = `MCS loss`))+
+  geom_density_2d()+
+  geom_point()+
+  geom_abline()
+ggplotly(p, dynamicTicks = T)
+p
+
+#actual loss comparison
+for (j in 1:10000) {
+  y = arima.sim(n = 1000, list(ar=c(phi)), sd=sqrt(sigma2), mean=alpha)
+  err = as.data.frame(forecast_errors(y, 1, 10, 1:8, real.order))
+  names(err)=c("grid search loss", "MCS loss")
+  errs = rbind(errs, as.data.frame(err))
+}
+t = mean(errs$`MCS loss`-errs$`grid search loss`)/(sqrt(var((errs$`MCS loss`-errs$`grid search loss`))) / sqrt(10000))
+t
+pt(t, df =9999)
+
+errs$diff = errs$`MCS loss` < errs$`grid search loss`
+pbinom(sum(errs$diff), 10000, 0.5)
+
+df = cbind(1:10000, errs[,c(1,2)])
+names(df)[1] = "Simulation number"
+df <- melt(df ,  id.vars = 'Simulation number', variable.name = 'Loss')
+ggplot(data= df, aes(value, after_stat(count), colour=Loss, fill=Loss)) + 
+  geom_density(position='stack', alpha=0.6)+xlim(c(0,10))
+
+
+ggplot(df, aes(x=`Simulation number`))+geom_density(aes(y=value, colour=Loss))
+p2 = ggplot(data = errs, aes(x=`grid search loss`, y = `MCS loss`))+
+  geom_density2d()+
+  geom_abline()
+ggplotly(p2, dynamicTicks = T)
+p2
