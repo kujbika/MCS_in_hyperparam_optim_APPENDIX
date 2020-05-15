@@ -9,10 +9,11 @@ Hyper-parameter optimization is a thoroughly investigated discipline in optimiza
 <br>
 <br>
 **Keywords:** global optimization, hyper-parameter optimization, model selection, Model Confidence Set, autoregressive processes, maximum likelihood estimator, infectious disease models, SEIR model, gamma distribution
-The repository is operated and maintained by the author (marcellkujbus@gmail.com).
-<br><br>
 
 ---
+<br><br>
+The repository is operated and maintained by the author (marcellkujbus@gmail.com).
+<br><br>
 <b> The working paper can be found here: </b><br>
 https://marcellkujbus.wixsite.com/mysite/projects
 <br>
