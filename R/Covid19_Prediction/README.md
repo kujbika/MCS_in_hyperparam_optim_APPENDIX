@@ -41,7 +41,7 @@ As a result, we would like to obtain a set that reacts to this issue. Whenever t
 <br>
 The Model Confidence Set was pioneered by [Hansen et al (2011)](https://onlinelibrary.wiley.com/doi/abs/10.3982/ECTA5771). It is commonly accepted as a forecast trimmer, yet no one really tried to apply the idea to hyper-parameter optimization. With a slight refactor, I formulated the underlying mathematics to be applicable to this type of process.
 <br>
- All the mathematical details are in the paper of mine, click to the project's title to see.
+ *All the mathematical details are in the paper*
 
 ---
 ## [The MN-SEIR model](https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.0020174)
@@ -109,15 +109,13 @@ The parameters of the models (within each group <img src="svgs/924c2a38ef139efbe
 * <img src="svgs/6834db793eb4d3eefb92e28742316579.svg?invert_in_darkmode" align=middle width=18.28822049999999pt height=14.15524440000002pt/>
 * <img src="svgs/6fb3ad53b9c3e50139eac4c41d03389d.svg?invert_in_darkmode" align=middle width=15.27633194999999pt height=22.831056599999986pt/>
 * N
+
 From this list, <img src="svgs/f9c4988898e7f532b9f826a75014ed3c.svg?invert_in_darkmode" align=middle width=14.99998994999999pt height=22.465723500000017pt/> and <img src="svgs/917b0b5c3b69af0b1d9daa049c4443da.svg?invert_in_darkmode" align=middle width=17.53863374999999pt height=14.15524440000002pt/> can be handled as constants: <img src="svgs/f9c4988898e7f532b9f826a75014ed3c.svg?invert_in_darkmode" align=middle width=14.99998994999999pt height=22.465723500000017pt/> is the population size and <img src="svgs/917b0b5c3b69af0b1d9daa049c4443da.svg?invert_in_darkmode" align=middle width=17.53863374999999pt height=14.15524440000002pt/> is the susceptible quarantine period which is fixed by the government. The only hyper-parameters of the system are <img src="svgs/0e51a2dede42189d77627c4d742822c3.svg?invert_in_darkmode" align=middle width=14.433101099999991pt height=14.15524440000002pt/> and <img src="svgs/55a049b8f161ae7cfeb0197d75aff967.svg?invert_in_darkmode" align=middle width=9.86687624999999pt height=14.15524440000002pt/>.
 
 ---
 
-## [Figures]()
+## [Figures](https://github.com/kujbika/MCS_in_hyperparam_optim_APPENDIX/tree/master/R/Covid19_Prediction/Figures)
 
-See the working paper.
-
----
-## [Results]()
-
-Results are not yet available.
+Click the title or click [here](https://github.com/kujbika/MCS_in_hyperparam_optim_APPENDIX/tree/master/R/Covid19_Prediction/Figures) that directs to the figures folder.
+<br>
+Additionally, almost every plot are available interactively [here](https://rpubs.com/kujbika). The respective interpretations are in the paper.

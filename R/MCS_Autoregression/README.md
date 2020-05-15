@@ -39,9 +39,9 @@ That is exactly what the grid search method uses. However, this does not tell an
 <br>
 As a result, we would like to obtain a set that reacts to this issue. Whenever the losses are flat, we are not quite confident about our choice: so why not choosing the whole set as a superior set. Whenever the loss is sharp, then we can be more confident by cutting the set towards a singleton set.
 <br>
-The Model Confidence Set was pioneered by Hansen et al (2011) (link the title that directs to the paper). It is commonly accepted as a forecast trimmer, yet no one really tried to apply the idea to hyper-parameter optimization. With a slight refactor, I formulated the underlying mathematics to be applicable to this type of process.
+The [Model Confidence](https://onlinelibrary.wiley.com/doi/abs/10.3982/ECTA5771) Set was pioneered by Hansen et al (2011). It is commonly accepted as a forecast trimmer, yet no one really tried to apply the idea to hyper-parameter optimization. With a slight refactor, I formulated the underlying mathematics to be applicable to this type of process.
 <br>
- All the mathematical details are in the paper of mine, click to the project's title to see.
+*All the mathematical details are available in the paper.*
 
 ---
 ## [Autoregressive processes](https://en.wikipedia.org/wiki/Autoregressive_model)
@@ -74,11 +74,8 @@ In that case <img src="svgs/d1bc722dfb2752bd7fd4aebcce4e2d22.svg?invert_in_darkm
 
 ---
 
-## [Figures]()
+## [Figures](https://github.com/kujbika/MCS_in_hyperparam_optim_APPENDIX/tree/master/R/MCS_Autoregression/Figures)
 
-See the working paper.
-
----
-## [Results]()
-
-Results are not yet available.
+Click the title or click [here](https://github.com/kujbika/MCS_in_hyperparam_optim_APPENDIX/tree/master/R/MCS_Autoregression/Figures) that directs to the figures folder.
+<br>
+Additionally, almost every plot are available interactively [here](https://rpubs.com/kujbika). The respective interpretations are in the paper.
