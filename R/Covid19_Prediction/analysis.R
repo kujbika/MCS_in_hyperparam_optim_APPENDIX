@@ -99,14 +99,14 @@ p_I
 ggplotly(p_I, dynamicTicks = T)
 
 p_Q <- ggplot(data=cases, aes(x=Date))+guides(color = FALSE, size = FALSE)+
-  geom_line(aes(y=Q, colour="Asymptotic infectious"))+
+  geom_line(aes(y=Q, colour="Infectious quarantine"))+
   scale_x_date(date_labels="%Y-%m-%d")+
   scale_y_continuous(name="Infectious quarantine class, N.Y state, U.S.A")
 p_Q
 ggplotly(p_Q, dynamicTicks = T)
 
 p_E <- ggplot(data=cases, aes(x=Date))+guides(color = FALSE, size = FALSE)+
-  geom_line(aes(y=E1+E2+E3, colour="Asymptotic infectious"))+
+  geom_line(aes(y=E1+E2+E3, colour="Total exposed"))+
   scale_x_date(date_labels="%Y-%m-%d")+
   scale_y_continuous(name="Exposed class, N.Y state, U.S.A")
 p_E
