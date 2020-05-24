@@ -14,7 +14,7 @@ Hyper-parameter optimization is a thoroughly investigated discipline in optimiza
 <br><br>
 The repository is operated and maintained by the author (marcellkujbus@gmail.com).
 <br><br>
-<b> The working paper can be found here: </b><br>
+<b> The working paper can be found [here](MCS_extension_of_grid_search.pdf) or at my website: </b><br>
 https://marcellkujbus.wixsite.com/mysite/projects
 <br>
 For contribution, see the [contribution guideline](CONTRIBUTION.md)
